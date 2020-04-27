@@ -1,6 +1,9 @@
+#!/bin/bash
+
 export COMPOSE_FILE=local.yml
+echo 'local vars exported'
 
-docker rm -f ride_django_1
+docker-compose up
 
-docker-compose run --rm --service-ports django
-
+#docker rm -f ride_django_1
+#docker-compose run --rm --service-ports django
