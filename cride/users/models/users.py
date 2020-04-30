@@ -1,4 +1,4 @@
-"""Users Model"""
+"""Users Model."""
 
 # Django
 from django.db import models
@@ -8,8 +8,10 @@ from django.core.validators import RegexValidator
 # Utilities
 from cride.utils.models import CRideModel
 
+
 class User(CRideModel, AbstractUser):
-    """User models.
+    """
+    User models.
 
     Extend from Django's Abtsaract User and local Utilities
     """
@@ -19,12 +21,12 @@ class User(CRideModel, AbstractUser):
         max_length=254,
         unique=True,
         error_messages={
-            'unique':'A user with that email already exists.'
+            'unique': 'A user with that email already exists.'
         }
     )
 
-    phone_regex= RegexValidator(
-        regex= r'\+?1?\d{9,15}$',
+    phone_regex = RegexValidator(
+        regex=r'\+?1?\d{9,15}$',
         message='Phone number must be entered in the format : +99999999 up to 15 digits allowed'
     )
     phone_number = models.CharField(
@@ -51,9 +53,10 @@ class User(CRideModel, AbstractUser):
         help_text='Set to true when the users have verified its email address'
     )
 
-
     def __str__(self):
+        """Retun str username."""
         return self.username
 
     def get_short_name(self):
-        return self.username  
+        """Return username like the shortname."""
+        return self.username

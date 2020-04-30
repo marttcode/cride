@@ -31,7 +31,6 @@ ROOT_URLCONF = 'config.urls'
 WSGI_APPLICATION = 'config.wsgi.application'
 
 # Users & Authentication
-
 AUTH_USER_MODEL = 'users.User'
 
 # Apps
