@@ -7,44 +7,24 @@ from rest_framework.response import Response
 # Module
 from cride.circles.models import Circle
 
+# Serializer
+from cride.circles.serializers import CircleSerializer, CreateCircleSerializer
+
 
 @api_view(['GET'])
 def list_circles(request):
     """List circles."""
-    pass
-    cirlces = Circle.objects.all()
-    public = cirlces.filter(is_public=True)
+    circles = Circle.objects.filter(is_public=True)
+    serializers = CircleSerializer(circles, many=True)
 
-    data = list()
-
-    for circle in public:
-        data.append({
-            'name': circle.name,
-            'slug_name': circle.slug_name,
-            'rides_taken': circle.rides_taken,
-            'members_limit': circle.members_limit,
-        })
-
-    return Response(data)
+    return Response(serializers.data)
 
 
 @api_view(['POST'])
 def create_circle(request):
     """Create circle."""
-    name = request.data['name']
-    slug_name = request.data['slug_name']
-    about = request.data.get('about', '')
-    circle = Circle.objects.create(
-        name=name,
-        slug_name=slug_name,
-        about=about
-    )
+    serializer = CreateCircleSerializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+    circle = serializer.save()
 
-    data = {
-        'name': circle.name,
-        'slug_name': circle.slug_name,
-        'rides_taken': circle.rides_taken,
-        'members_limit': circle.members_limit,
-    }
-
-    return Response(data)
+    return Response(CircleSerializer(circle).data)
