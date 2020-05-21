@@ -11,6 +11,7 @@ urlpatterns = [
     path(settings.ADMIN_URL, admin.site.urls),
 
     # Local
-    path('', include(('cride.circles.urls', 'circles'), namespace='circle')),
+    path('', include(('cride.circles.urls', 'circles'), namespace='circles')),
+    path('', include(('cride.users.urls', 'users'), namespace='users')),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
