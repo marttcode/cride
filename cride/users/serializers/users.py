@@ -3,6 +3,8 @@
 # Django
 from django.contrib.auth import authenticate, password_validation
 from django.core.validators import RegexValidator
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
 
 # Django REST Framework
 from rest_framework import serializers
@@ -40,6 +42,8 @@ class UserLoginSerializer(serializers.Serializer):
 
         if not user:
             raise serializers.ValidationError('Invalid credentials')
+        if not user.is_verified:
+            raise serializers.ValidationError('Account is not active yet :(')
 
         self.context['user'] = user
 
@@ -94,6 +98,28 @@ class UserSignUpSerializer(serializers.Serializer):
     def create(self, data):
         """Handle user and profile creation."""
         data.pop('password_confirmation')
-        user = User.objects.create_user(**data)
-        profile = Profile.objects.create(user=user)
+        user = User.objects.create_user(**data, is_verified=False)
+        Profile.objects.create(user=user)
+        self.send_confirmation_email(user)
         return user
+
+    def send_confirmation_email(self, user):
+        """Send account verification link to given user."""
+        verification_token = self.gen_verification_token(user)
+        subject = "Welcome @{}!, Verify your account to start using comparte Ride".format(user.username)
+        from_email = 'Comparte Ride <noreply@comparteride.com>'
+        to = user.email
+        content = render_to_string(
+            'email/users/account_verification.html',
+            {'token': verification_token, 'user': user}
+        )
+
+        msg = EmailMultiAlternatives(subject, content, from_email, [to])
+        msg.attach_alternative(content, "text/html")
+        msg.send()
+
+        print(verification_token)
+
+    def gen_verification_token(self, user):
+        """Create JWT token that the user can use to verify its account."""
+        return 'super_secret_token'
