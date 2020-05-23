@@ -7,11 +7,10 @@ import csv
 from cride.circles.models import Circle
 
 
-def importCircles(file):
-    """Import cicles data from App."""
-    with open(file, mode='r') as csvfile:
+def import_csv(csv_filename):
+    with open(csv_filename, mode='r') as csvfile:
         reader = csv.DictReader(csvfile)
-
         for row in reader:
             circle = Circle(**row)
             circle.save()
+            print(circle.name)
