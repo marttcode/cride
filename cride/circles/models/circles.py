@@ -12,7 +12,7 @@ class Circle(CRideModel):
     """
     Circle model.
 
-    A circule is a private group where rides are offered and taken
+    A circle is a private group where rides are offered and taken
     by its members. To join a circle a user must receive
     an unique invitation code from an existing circle member.
     """
@@ -28,6 +28,12 @@ class Circle(CRideModel):
         max_length=None,
         blank=True,
         null=True
+    )
+
+    members = models.ManyToManyField(
+        'users.User',
+        through='circles.Membership',
+        through_fields=('circle', 'user')
     )
 
     # Stats
@@ -62,4 +68,4 @@ class Circle(CRideModel):
     class Meta(CRideModel.Meta):
         """Meta Class."""
 
-        ordering = ['-rides_taken', '-rides_offered']    
+        ordering = ['-rides_taken', '-rides_offered']
