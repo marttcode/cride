@@ -1,10 +1,12 @@
 """Users Serializers."""
 
 # Django
+from django.conf import settings
 from django.contrib.auth import authenticate, password_validation
 from django.core.validators import RegexValidator
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
+from django.utils import timezone
 
 # Django REST Framework
 from rest_framework import serializers
@@ -13,6 +15,10 @@ from rest_framework.validators import UniqueValidator
 
 # Models
 from cride.users.models import User, Profile
+
+# Utilities
+from datetime import timedelta
+import jwt
 
 
 class UserModelSerializer(serializers.ModelSerializer):
@@ -118,8 +124,43 @@ class UserSignUpSerializer(serializers.Serializer):
         msg.attach_alternative(content, "text/html")
         msg.send()
 
-        print(verification_token)
-
     def gen_verification_token(self, user):
         """Create JWT token that the user can use to verify its account."""
-        return 'super_secret_token'
+        exp_date = timezone.now() + timedelta(days=3)
+        payload = {
+            'user': user.username,
+            'exp': int(exp_date.timestamp()),
+            'type': 'email_confirmation',
+        }
+        token = jwt.encode(payload, settings.SECRET_KEY, algorithm='HS256')
+
+        return token.decode()
+
+
+class AccountVerificationSerializer(serializers.Serializer):
+    """Account verification Serializer."""
+
+    token = serializers.CharField()
+
+    def validate_token(self, data):
+        """Verify token is valid."""
+        try:
+            payload = jwt.decode(data, settings.SECRET_KEY, algorithms=['HS256'])
+        except jwt.ExpiredSignatureError:
+            raise serializers.ValidationError('Verification link has expired.')
+        except jwt.PyJWTError:
+            raise serializers.ValidationError('Invalid token.')
+        if payload['type'] != 'email_confirmation':
+            raise serializers.ValidationError('Invalid token.')
+
+        self.context['payload'] = payload
+        self.save()
+        return data
+
+    def save(self):
+        """Update user's verified status."""
+        payload = self.context['payload']
+        user = User.objects.get(username=payload['user'])
+        print(payload['user'])
+        user.is_verified = True
+        user.save()
