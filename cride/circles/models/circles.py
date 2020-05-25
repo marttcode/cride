@@ -40,9 +40,9 @@ class Circle(CRideModel):
     rides_offered = models.PositiveIntegerField(default=0)
     rides_taken = models.PositiveIntegerField(default=0)
     verified = models.BooleanField(
-        'verifief circle',
+        'verified circle',
         default=False,
-        help_text='Verified cicles are also know as official communities.'
+        help_text='Verified circles are also know as official communities.'
     )
 
     is_public = models.BooleanField(
@@ -53,12 +53,12 @@ class Circle(CRideModel):
     is_limited = models.BooleanField(
         'limited group',
         default=False,
-        help_text='Limited cicles can grow up to fixed number of members.'
+        help_text='Limited circles can grow up to fixed number of members.'
     )
 
     members_limit = models.PositiveIntegerField(
         default=0,
-        help_text='If cicles is limited, this will be the limit on the number of menbers.'
+        help_text='If circles is limited, this will be the limit on the number of members.'
     )
 
     def __str__(self):
