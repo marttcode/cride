@@ -278,3 +278,6 @@ cride/media/
 .envs/*
 !.envs/.local/
 .vscode
+
+#Migrations
+cride/circles/migrations/

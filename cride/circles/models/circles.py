@@ -17,7 +17,7 @@ class Circle(CRideModel):
     an unique invitation code from an existing circle member.
     """
 
-    name = models.CharField("circule name", max_length=150)
+    name = models.CharField("circle name", max_length=150)
     slug_name = models.SlugField(unique=True, max_length=40)
     about = models.CharField('circle description', max_length=255)
 
