@@ -281,3 +281,4 @@ cride/media/
 
 #Migrations
 cride/circles/migrations/
+cride/rides/migrations/
