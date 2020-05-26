@@ -35,7 +35,7 @@ class Membership(CRideModel):
     )
 
     # Status
-    rides_token = models.PositiveIntegerField(default=0)
+    rides_taken = models.PositiveIntegerField(default=0)
     rides_offered = models.PositiveIntegerField(default=0)
     is_active = models.BooleanField(
         'Active status',
