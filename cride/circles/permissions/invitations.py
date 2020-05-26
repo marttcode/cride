@@ -5,7 +5,7 @@ from rest_framework.permissions import BasePermission
 
 
 class IsSelfMember(BasePermission):
-    """Allow access only to members owner."""
+    """Allow access only to member owners."""
 
     def has_permission(self, request, view):
         """Let object permission grant access."""
