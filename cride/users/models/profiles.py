@@ -13,7 +13,7 @@ class Profile(CRideModel):
     Profile model.
 
     A profile holds a user's public data like
-    biography, picture and statistcs.
+    biography, picture and statitcs.
     """
 
     user = models.OneToOneField(
