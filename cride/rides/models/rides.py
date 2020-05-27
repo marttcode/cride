@@ -32,11 +32,11 @@ class Ride(CRideModel):
 
     def __str__(self):
         """Return ride details."""
-        return '{_from} to {to} | {day} {i_time} - {f_time} by {by}'.format(
+        return '{_from} to {to} | {day} {i_time} - {f_time}'.format(
             _from=self.departure_location,
             to=self.arrival_location,
             day=self.departure_date.strftime('%a %d, %b'),
             i_time=self.departure_date.strftime('%I:%M %p'),
             f_time=self.arrival_date.strftime('%I:%M %p'),
-            by=self.offered_by.user.username,
+            #by=self.offered_by.user.username,
         )
